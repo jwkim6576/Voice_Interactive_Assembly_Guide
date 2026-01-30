@@ -1,6 +1,7 @@
 # 🗣️ Voice Interactive Assembly Guide Robot (AI Co-worker)
 
-![Project Banner](https://placeholder.com/wp-content/uploads/2018/10/placeholder.com-logo1.png)
+<img width="1964" height="1053" alt="image" src="https://github.com/user-attachments/assets/7579f045-6c37-435b-9cbf-6dc2bbfbf870" />
+
 
 <br>
 
@@ -31,7 +32,7 @@
 | Name | Role | Responsibility |
 |:---:|:---:|:---|
 | **Kim Jung-wook** | **Team Leader** <br> **& Scenario Dev** | - **Scenario Logic Design:** 개별/통합 불량 처리 및 조립 검증 시나리오 설계 (State Machine) <br> - **AI Model Training:** 불량/양품 분류를 위한 Custom Dataset 구축 및 YOLO 모델 학습 <br> - **Documentation:** 프로젝트 산출물 관리 및 기술 문서화 |
-| **Lee Kang-yeop** | PM & Integration | - **System Integration:** 전체 ROS2 노드(Voice, Vision, Control) 통합 및 일정 관리 <br> - **Safety Logic:** 충돌 감지 및 비상 정지 알고리즘 구현 |
+| **Lee Kang-yeop** | PM & Integration | - **System Integration:** 전체 ROS2 노드(Voice, Vision, Control) 통합 및 일정 관리 <br> - **Safety Logic:** 안전 알고리즘(충돌 감지, 비상 정지) 구현 및 안전영역 설계|
 | **Kim Da-bin** | Vision & Environment | - **YOLO Optimization:** YOLOv11-OBB 하이퍼파라미터 튜닝 및 학습 성능 개선 <br> - **Environment Setup:** 작업대 환경 구성 및 데이터셋 라벨링 |
 | **Kang Dong-hyuk** | Hardware Support | - **Robot Setup:** 두산 로봇 및 그리퍼 하드웨어 초기 설정 지원 |
 
@@ -39,7 +40,17 @@
 
 ## 🛠 System Architecture
 
-> **[여기에 PPT 12페이지의 '노드 아키텍처' 다이어그램을 넣으세요]**
+<img width="1875" height="989" alt="image" src="https://github.com/user-attachments/assets/c8418258-fd1f-404f-9eb7-2c53a3b190a5" />
+
+<img width="1906" height="987" alt="image" src="https://github.com/user-attachments/assets/d050bbb2-3812-458f-afaf-f6b69e585955" />
+
+<img width="1782" height="948" alt="image" src="https://github.com/user-attachments/assets/599a2c30-4331-4ca9-a6de-288af41a4947" />
+
+<img width="1543" height="990" alt="image" src="https://github.com/user-attachments/assets/b8256d8a-ed39-4dab-8e65-3ccc64e8f42b" />
+
+<img width="1878" height="937" alt="image" src="https://github.com/user-attachments/assets/82aabcb7-4774-418f-b615-1ad4c95b3d82" />
+
+
 
 시스템은 크게 **사용자 인터페이스(Voice)**, **인지(Vision)**, **제어(Control)** 3가지 핵심 노드로 구성됩니다.
 
@@ -65,13 +76,25 @@
 ### 1. YOLOv11-OBB (Oriented Bounding Box)
 일반적인 사각형(Bounding Box)은 회전된 부품을 잡을 때 그리퍼 각도를 알 수 없는 문제가 있습니다.
 본 프로젝트는 최신 **YOLOv11-OBB** 모델을 도입하여 객체의 **회전 각도($\theta$)**까지 정밀하게 추론, 로봇이 부품의 각도에 맞춰 손목을 회전하며 잡을 수 있도록 구현했습니다.
-> **[여기에 PPT 15페이지의 'OBB vs Bounding Box' 비교 사진을 넣으세요]**
+
+<img width="1876" height="895" alt="image" src="https://github.com/user-attachments/assets/5cc40446-a89c-431b-b46b-17acffefa96d" />
+
+<img width="1925" height="940" alt="image" src="https://github.com/user-attachments/assets/06dcfd46-d5b2-4b5b-9af4-4e96a60c6326" />
+
+<img width="1830" height="983" alt="image" src="https://github.com/user-attachments/assets/1a6b6899-bac0-4753-9c63-69574003c4b4" />
+
+<img width="1843" height="903" alt="image" src="https://github.com/user-attachments/assets/3e54b978-4bfb-4c1e-9df1-5c71cb9a9216" />
+
+<img width="1831" height="885" alt="image" src="https://github.com/user-attachments/assets/2c49ee3d-001c-4bb6-8754-70635986446e" />
+
 
 ### 2. Depth Correction Algorithm (5-Point Spatial Averaging)
 저가형 Depth 카메라 특성상 발생하는 **'튀는 값(Noise)'** 문제를 해결하기 위해 자체 보정 알고리즘을 개발했습니다.
 * **공간적 평균(Spatial):** 객체 중심점 주변 5개 픽셀의 Depth 값을 샘플링하여 평균값 사용
 * **시간적 평균(Temporal):** 5프레임 연속 측정 후 평균을 내어 떨림 현상 제거
-> **[여기에 PPT 28페이지의 '빨간색 점 5개가 찍힌' 보정 알고리즘 사진을 넣으세요]**
+ 
+<img width="1823" height="976" alt="image" src="https://github.com/user-attachments/assets/28b1d00e-93ff-4163-8784-dfaca5a6f859" />
+
 
 ### 3. AI Voice Interaction
 단순한 키워드 매칭이 아닌, LLM을 활용하여 작업자의 자연스러운 언어를 이해합니다.
@@ -81,7 +104,6 @@
 
 ## 📊 Performance Analysis
 
-> **[여기에 PPT 19페이지의 학습 그래프나, 33페이지의 결과 분석 표를 넣으세요]**
 
 * **YOLO Detection Accuracy:** mAP50-95 기준 **97%** 달성
 * **Sort Success Rate:** 불량품 분류 성공률 **99%** (시나리오 기반 검증)
@@ -91,4 +113,12 @@
 
 ## 🎥 Demo Video
 
-> **[여기에 시연 영상 GIF나 유튜브 링크를 넣으세요]**
+https://youtu.be/9G9PHG_XNIQ
+
+https://youtu.be/Hi0sv22zA84
+
+https://youtu.be/z8DrpZIK1nQ
+
+https://youtu.be/tmS-EllnBG4
+
+https://youtu.be/ifsjuv5GlYo
