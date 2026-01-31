@@ -11,9 +11,11 @@
 ### 2. [Team & Roles](#-team--roles)
 ### 3. [System Architecture](#-system-architecture)
 ### 4. [Tech Stack](#-tech-stack)
-### 5. [Key Features & Logic](#-key-features--logic)
-### 6. [Performance Analysis](#-performance-analysis)
-### 7. [Demo Video](#-demo-video)
+### 5. [Installation & Setup](#-installation--setup)
+### 6. [Execution & Usage](#-execution--usage)
+### 7. [Key Features & Logic](#-key-features--logic)
+### 8. [Performance Analysis](#-performance-analysis)
+### 9. [Demo Video](#-demo-video)
 
 <br>
 
@@ -71,6 +73,77 @@
 
 <br>
 
+## 📦 Installation & Setup
+
+프로젝트 실행에 필요한 시스템 패키지와 Python 라이브러리를 설치합니다.
+
+### 1. 시스템 패키지 설치 (Audio & Driver)
+마이크 입력(PyAudio)과 mp3 재생(mpg321)을 위해 필요한 리눅스 패키지입니다.
+
+sudo apt update
+sudo apt install portaudio19-dev mpg321
+### 2. Python 의존성 설치
+소스 코드 구동에 필요한 핵심 라이브러리(음성, 비전, LLM)를 설치합니다.
+
+
+음성 인식/합성 및 OpenAI 연동
+
+pip install gTTS SpeechRecognition pyaudio langchain-openai python-dotenv
+
+비전 및 수학 라이브러리
+
+pip install ultralytics opencv-python scipy numpy
+
+### 3. 환경 변수 설정 (.env)
+OpenAI API 사용을 위해 프로젝트 resource 폴더 내에 .env 파일을 생성하고 키를 입력합니다.
+
+
+OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxxxxxxxxxxxxx
+# ⚡ Execution & Usage
+총 5개의 터미널 창(Terminal Tabs)을 열어 아래 순서대로 실행해 주세요.
+
+### Terminal 1: 두산 로봇 연결 (Bringup)
+로봇 컨트롤러와 통신을 시작하고 RViz를 실행합니다.
+
+ros2 launch dsr_bringup2 dsr_bringup2_rviz.launch.py mode:=real host:=192.168.1.100 port:=12345 model:=m0609
+
+
+### Terminal 2: 리얼센스 카메라 구동
+Depth 및 RGB 스트림을 활성화하고 포인트 클라우드를 생성합니다.
+
+ros2 launch realsense2_camera rs_align_depth_launch.py depth_module.depth_profile:=640*480*30 rgb_camera.color_profile:=640*480*30 initial_reset:=true align_depth.enable:=true enable_rgbd:=true pointcloud.enable:=true
+
+
+### Terminal 3: 객체 인식 (YOLO Node)
+카메라 영상을 받아 부품의 종류와 위치(좌표)를 판별합니다.
+
+ros2 run dsr_rokey2 yolo_node_fin
+
+
+### Terminal 4: 로봇 제어 (Robot Control)
+판별된 좌표를 바탕으로 로봇의 실제 움직임(Pick & Place)을 제어합니다.
+
+ros2 run dsr_rokey2 robot_control_final
+
+
+### Terminal 5: 스마트 매니저 (Voice & Logic)
+음성 명령을 인식하고 전체 공정의 흐름을 관리합니다.
+
+ros2 run dsr_rokey2 smart_manager_integrated_2
+
+
+# 🔧 Utility Commands (Manual Mode)
+로봇을 손으로 직접 움직여야 할 때(티칭 등) 직접 교시 모드로 전환합니다.
+
+
+### 수동 모드 (Direct Teaching)
+ros2 service call /dsr01/system/set_robot_mode dsr_msgs2/srv/SetRobotMode "{robot_mode: 0}"
+
+### 자동 모드 (Auto Mode)
+ros2 service call /dsr01/system/set_robot_mode dsr_msgs2/srv/SetRobotMode "{robot_mode: 1}"
+
+<br>
+
 ## 🚀 Key Features & Logic
 
 ### 1. YOLOv11-OBB (Oriented Bounding Box)
@@ -98,7 +171,7 @@
 
 ### 3. AI Voice Interaction
 단순한 키워드 매칭이 아닌, LLM을 활용하여 작업자의 자연스러운 언어를 이해합니다.
-* *"이거 불량품이네, 좀 치워줘"* -> **[명령 인식: 불량품 폐기]** -> **[로봇 동작]**
+* *"이거 불량품이네, 좀 치워줘(또는 찾아줘)"* -> **[명령 인식: 불량품 폐기를 위한 Pick & Place (또는 찾아주려는 용도로 접근만)]** -> **[로봇 동작]**
 
 <br>
 
