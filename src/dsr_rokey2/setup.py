@@ -37,6 +37,7 @@ setup(
             'robot_control_3 = dsr_rokey2.robot_control_3:main',
             'yolo_node_4 = dsr_rokey2.yolo_node_4:main',
             'robot_control_4 = dsr_rokey2.robot_control_4:main',
+            'robot_control_4(1) = dsr_rokey2.robot_control_4(1):main',
             'smart_manager_4 = dsr_rokey2.smart_manager_4:main',
             'robot_control_1 = dsr_rokey2.robot_control_1:main',
             'smart_manager_5 = dsr_rokey2.smart_manager_5:main',
@@ -55,6 +56,7 @@ setup(
             'robot_control_final = dsr_rokey2.robot_control_final:main',
             'smart_manager_fin = dsr_rokey2.smart_manager_fin:main',
             'smart_manager_integrated = dsr_rokey2.smart_manager_integrated:main',
+            'smart_manager_integrated_2 = dsr_rokey2.smart_manager_integrated_2:main',
 
 
 
